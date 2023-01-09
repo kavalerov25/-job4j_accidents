@@ -5,19 +5,45 @@ import ru.job4j.model.Accident;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class AccidentMem {
+    private static final AccidentMem INST = new AccidentMem();
     private final Map<Integer, Accident> accidents = new ConcurrentHashMap<>();
+    AtomicInteger idCount = new AtomicInteger();
 
     public AccidentMem() {
-        accidents.put(0, new Accident(0, "Stas", "Description 1", "Address 1"));
-        accidents.put(1, new Accident(1, "Kir", "Description 2", "Address 2"));
-        accidents.put(2, new Accident(2, "Petr", "Description 3", "Address 3"));
+        accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Stas", "Description 1", "Address 1"));
+        accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Kir", "Description 2", "Address 2"));
+        accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Petr", "Description 3", "Address 3"));
+    }
+
+    public static AccidentMem instOf() {
+        return INST;
     }
 
     public Collection<Accident> findAll() {
         return accidents.values();
     }
+
+    public void create(Accident accident) {
+        accident.setId(idCount.incrementAndGet());
+        accidents.put(accident.getId(), accident);
+    }
+
+    public void update(Accident accident) {
+        accidents.replace(accident.getId(), accident);
+    }
+
+    public Optional<Accident> findById(int id) {
+        Accident accident = accidents.get(id);
+        if (accident == null) {
+            return Optional.empty();
+        }
+        return Optional.of(accident);
+    }
+
 }

@@ -56,6 +56,9 @@
             </thead>
             <tbody>
             <tr th:each="accident: ${accidents}">
+                <a th:href="@{|/formUpdateAccident?id=${accident.id}|}">
+                    <i class="fa fa-edit"></i>
+                </a>
                 <td th:text="${accident.id}"></td>
                 <td th:text="${accident.name}"></td>
                 <td th:text="${accident.text}"></td>
@@ -63,6 +66,9 @@
             </tr>
             </tbody>
         </table>
+    </div>
+    <div class="button">
+        <a class="btn btn-primary" th:href="@{/createAccident}" role="button">Добавить новый инцидент</a>
     </div>
 </div>
 </body>
