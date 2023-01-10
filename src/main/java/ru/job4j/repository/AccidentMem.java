@@ -2,6 +2,7 @@ package ru.job4j.repository;
 
 import org.springframework.stereotype.Repository;
 import ru.job4j.model.Accident;
+import ru.job4j.model.AccidentType;
 
 import java.util.Collection;
 import java.util.Map;
@@ -16,9 +17,9 @@ public class AccidentMem {
     AtomicInteger idCount = new AtomicInteger();
 
     public AccidentMem() {
-        accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Stas", "Description 1", "Address 1"));
-        accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Kir", "Description 2", "Address 2"));
-        accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Petr", "Description 3", "Address 3"));
+        accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Stas", "Description 1", "Address 1", new AccidentType()));
+        accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Kir", "Description 2", "Address 2", new AccidentType()));
+        accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Petr", "Description 3", "Address 3", new AccidentType()));
     }
 
     public static AccidentMem instOf() {
