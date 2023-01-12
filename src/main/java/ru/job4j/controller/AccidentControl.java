@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.job4j.model.Accident;
 import ru.job4j.model.AccidentType;
 import ru.job4j.service.AccidentService;
+import ru.job4j.service.AccidentTypeService;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -17,15 +18,11 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AccidentControl {
     private final AccidentService accidents;
-
+    private final AccidentTypeService types;
 
     @GetMapping("/createAccident")
     public String viewCreateAccident(Model model) {
-        List<AccidentType> types = new ArrayList<>();
-        types.add(new AccidentType(1, "Две машины"));
-        types.add(new AccidentType(2, "Машина и человек"));
-        types.add(new AccidentType(3, "Машина и велосипед"));
-        model.addAttribute("types", types);
+        model.addAttribute("types", types.getTypes());
         return "createAccident";
     }
 
@@ -36,18 +33,15 @@ public class AccidentControl {
     }
 
     @GetMapping("/formUpdateAccident/{id}")
-    public String update(Model model, @RequestParam("id") int id) {
-        Optional<Accident> optAccident = accidents.findById(id);
-        if (optAccident.isEmpty()) {
-            return "404";
-        }
-        model.addAttribute("accident", optAccident.get());
+    public String update(Model model, @PathVariable("id") int id) {
+        model.addAttribute("accident", accidents.findById(id));
+        model.addAttribute("types", types.getTypes());
         return "formUpdateAccident";
     }
 
     @PostMapping("/updateAccident")
     public String update(@ModelAttribute Accident accident) {
-        accidents.update(accident);
+        accidents.update(accident.getId(), accident);
         return "redirect:/index";
     }
 }

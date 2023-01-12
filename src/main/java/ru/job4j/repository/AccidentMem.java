@@ -35,7 +35,7 @@ public class AccidentMem {
         accidents.put(accident.getId(), accident);
     }
 
-    public void update(Accident accident) {
+    public void update(int id, Accident accident) {
         accidents.replace(accident.getId(), accident);
     }
 
