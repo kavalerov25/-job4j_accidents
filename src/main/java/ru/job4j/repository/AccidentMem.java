@@ -3,10 +3,12 @@ package ru.job4j.repository;
 import org.springframework.stereotype.Repository;
 import ru.job4j.model.Accident;
 import ru.job4j.model.AccidentType;
+import ru.job4j.model.Rule;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -17,14 +19,14 @@ public class AccidentMem {
     AtomicInteger idCount = new AtomicInteger();
 
     public AccidentMem() {
-        accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Stas", "Description 1", "Address 1", new AccidentType()));
-        accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Kir", "Description 2", "Address 2", new AccidentType()));
-        accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Petr", "Description 3", "Address 3", new AccidentType()));
+        accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Stas", "Description 1", "Address 1",
+                new AccidentType(), Set.of(new Rule())));
+        accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Kir", "Description 2", "Address 2",
+                new AccidentType(), Set.of(new Rule())));
+        accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Petr", "Description 3", "Address 3",
+                new AccidentType(), Set.of(new Rule())));
     }
 
-    public static AccidentMem instOf() {
-        return INST;
-    }
 
     public Collection<Accident> findAll() {
         return accidents.values();

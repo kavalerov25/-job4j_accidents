@@ -5,13 +5,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.model.Accident;
-import ru.job4j.model.AccidentType;
+import ru.job4j.model.Rule;
 import ru.job4j.service.AccidentService;
 import ru.job4j.service.AccidentTypeService;
+import ru.job4j.service.RuleService;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @Controller
@@ -19,21 +18,29 @@ import java.util.Optional;
 public class AccidentControl {
     private final AccidentService accidents;
     private final AccidentTypeService types;
+    private final RuleService rules;
 
     @GetMapping("/createAccident")
     public String viewCreateAccident(Model model) {
         model.addAttribute("types", types.getTypes());
+        model.addAttribute("rules", rules.getRules());
         return "createAccident";
     }
 
     @PostMapping("/saveAccident")
-    public String save(@ModelAttribute Accident accident) {
+    public String save(@ModelAttribute Accident accident, HttpServletRequest req) {
+        String[] ids = req.getParameterValues("rIds");
         accidents.create(accident);
         return "redirect:/index";
     }
 
     @GetMapping("/formUpdateAccident/{id}")
     public String update(Model model, @PathVariable("id") int id) {
+        Optional<Accident> optAccident = Optional.ofNullable(accidents.findById(id));
+        if (optAccident.isEmpty()) {
+            return "404";
+        }
+        model.addAttribute("accident", optAccident.get());
         model.addAttribute("accident", accidents.findById(id));
         model.addAttribute("types", types.getTypes());
         return "formUpdateAccident";
@@ -44,4 +51,6 @@ public class AccidentControl {
         accidents.update(accident.getId(), accident);
         return "redirect:/index";
     }
+
+
 }

@@ -22,10 +22,6 @@
 </head>
 <body>
 
-<h2>
-    Application Hello Accidents:)
-</h2>
-
 <div class="container">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
@@ -52,6 +48,7 @@
                 <th scope="col">Описание</th>
                 <th scope="col">Адрес</th>
                 <th scope="col">Тип</th>
+                <th scope="col">Статья</th>
             </tr>
             </thead>
             <tbody>
@@ -64,6 +61,11 @@
                 <td th:text="${accident.text}"></td>
                 <td th:text="${accident.address}"></td>
                 <td th:text="${accident.type.name}" />
+                <td>
+                    <div th:each="rule: ${accident.rules}" >
+                        <span th:text="${rule.name}" />
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>
