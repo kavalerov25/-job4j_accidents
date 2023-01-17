@@ -36,8 +36,7 @@ public class AccidentMem {
         accidents.put(accident.getId(), accident);
     }
 
-    public boolean update(int id, Accident accident) {
-
+    public boolean update(Accident accident) {
         return accidents.replace(accident.getId(), accident) != null;
     }
 
@@ -49,4 +48,10 @@ public class AccidentMem {
         return Optional.of(accident);
     }
 
+    public Accident put(Accident accident) {
+        int id = idCount.incrementAndGet();
+        accident.setId(id);
+        accidents.put(id, accident);
+        return accident;
+    }
 }

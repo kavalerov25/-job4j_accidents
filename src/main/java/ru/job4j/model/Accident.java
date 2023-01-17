@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,4 +21,12 @@ public class Accident {
     private String address;
     private AccidentType type;
     private Set<Rule> rules = new HashSet<>();
+
+    public Set<Rule> getRules() {
+        return Set.copyOf(rules);
+    }
+    public void setRules(Collection<Rule> collection) {
+        rules.clear();
+        rules.addAll(collection);
+    }
 }

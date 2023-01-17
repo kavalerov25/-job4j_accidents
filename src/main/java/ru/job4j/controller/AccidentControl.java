@@ -12,23 +12,25 @@ import ru.job4j.service.RuleService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Controller
 @AllArgsConstructor
 public class AccidentControl {
     private final AccidentService accidents;
     private final AccidentTypeService typeService;
-    private final RuleService rules;
+    private final RuleService ruleService;
 
     @GetMapping("/createAccident")
     public String viewCreateAccident(Model model) {
         model.addAttribute("types", typeService.getTypes());
-        model.addAttribute("rules", rules.getRules());
+        model.addAttribute("rules", ruleService.getRules());
         return "createAccident";
     }
 
     @PostMapping("/saveAccident")
     public String save(@ModelAttribute Accident accident, HttpServletRequest req) {
+        takeAction(accident, act -> accidents.put(accident));
         String[] ids = req.getParameterValues("rIds");
         accidents.create(accident);
         return "redirect:/index";
@@ -48,11 +50,15 @@ public class AccidentControl {
 
     @PostMapping("/updateAccident")
     public String update(@ModelAttribute Accident accident) {
-        accident.setType(typeService.get(accident.getType().getId())
-                .orElseThrow(NoSuchElementException::new));
-        accidents.update(accident.getId(), accident);
+        takeAction(accident, act -> accidents.update(accident));
         return "redirect:/index";
+
     }
 
-
+    private void takeAction(Accident accident, Consumer<Accident> action) {
+        accident.setType(typeService.get(accident.getType().getId())
+                .orElseThrow(NoSuchElementException::new));
+        ruleService.setRules(accident);
+        action.accept(accident);
+    }
 }
