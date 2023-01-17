@@ -29,4 +29,12 @@ public class AccidentTypeMem {
     public Optional<AccidentType> findById(int id) {
         return Optional.ofNullable(types.get(id));
     }
+
+    public boolean update(AccidentType type) {
+        return types.replace(type.getId(), type) != null;
+    }
+
+    public Optional<AccidentType> get(int id) {
+        return Optional.of(types.get(id));
+    }
 }

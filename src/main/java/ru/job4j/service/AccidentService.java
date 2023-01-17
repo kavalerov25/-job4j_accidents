@@ -25,10 +25,10 @@ public class AccidentService {
         store.create(accident);
     }
 
-    public void update(int id, Accident accident) {
+    public boolean update(int id, Accident accident) {
         accident.setType(types.findById(accident.getType().getId()).orElseThrow(() ->
                 new NoSuchElementException("Тип инцидента не найден")));
-        store.update(id, accident);
+        return store.update(id, accident);
     }
 
     public Accident findById(int id) {

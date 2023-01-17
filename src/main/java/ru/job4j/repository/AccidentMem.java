@@ -14,9 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Repository
 public class AccidentMem {
-    private static final AccidentMem INST = new AccidentMem();
     private final Map<Integer, Accident> accidents = new ConcurrentHashMap<>();
-    AtomicInteger idCount = new AtomicInteger();
+    AtomicInteger idCount = new AtomicInteger(accidents.size());
 
     public AccidentMem() {
         accidents.put(idCount.incrementAndGet(), new Accident(idCount.get(), "Stas", "Description 1", "Address 1",
@@ -37,8 +36,9 @@ public class AccidentMem {
         accidents.put(accident.getId(), accident);
     }
 
-    public void update(int id, Accident accident) {
-        accidents.replace(accident.getId(), accident);
+    public boolean update(int id, Accident accident) {
+
+        return accidents.replace(accident.getId(), accident) != null;
     }
 
     public Optional<Accident> findById(int id) {

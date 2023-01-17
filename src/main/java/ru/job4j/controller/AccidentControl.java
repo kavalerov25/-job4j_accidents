@@ -5,24 +5,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.model.Accident;
-import ru.job4j.model.Rule;
 import ru.job4j.service.AccidentService;
 import ru.job4j.service.AccidentTypeService;
 import ru.job4j.service.RuleService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Controller
 @AllArgsConstructor
 public class AccidentControl {
     private final AccidentService accidents;
-    private final AccidentTypeService types;
+    private final AccidentTypeService typeService;
     private final RuleService rules;
 
     @GetMapping("/createAccident")
     public String viewCreateAccident(Model model) {
-        model.addAttribute("types", types.getTypes());
+        model.addAttribute("types", typeService.getTypes());
         model.addAttribute("rules", rules.getRules());
         return "createAccident";
     }
@@ -42,12 +42,14 @@ public class AccidentControl {
         }
         model.addAttribute("accident", optAccident.get());
         model.addAttribute("accident", accidents.findById(id));
-        model.addAttribute("types", types.getTypes());
+        model.addAttribute("types", typeService.getTypes());
         return "formUpdateAccident";
     }
 
     @PostMapping("/updateAccident")
     public String update(@ModelAttribute Accident accident) {
+        accident.setType(typeService.get(accident.getType().getId())
+                .orElseThrow(NoSuchElementException::new));
         accidents.update(accident.getId(), accident);
         return "redirect:/index";
     }
