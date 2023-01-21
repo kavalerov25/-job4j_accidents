@@ -25,4 +25,5 @@ public class AccidentTypeService {
     public Optional<AccidentType> get(int id) {
         return store.get(id);
     }
+
 }
