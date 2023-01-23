@@ -3,11 +3,14 @@ package ru.job4j.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import ru.job4j.model.Accident;
-import ru.job4j.service.AccidentService;
-import ru.job4j.service.AccidentTypeService;
-import ru.job4j.service.RuleService;
+import ru.job4j.service.AccidentDataService;
+import ru.job4j.service.AccidentTypeDataService;
+import ru.job4j.service.RuleDataService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.NoSuchElementException;
@@ -17,9 +20,9 @@ import java.util.function.Consumer;
 @Controller
 @AllArgsConstructor
 public class AccidentControl {
-    private final AccidentService accidents;
-    private final AccidentTypeService typeService;
-    private final RuleService ruleService;
+    private final AccidentDataService accidents;
+    private final AccidentTypeDataService typeService;
+    private final RuleDataService ruleService;
 
     @GetMapping("/createAccident")
     public String viewCreateAccident(Model model) {
@@ -30,7 +33,7 @@ public class AccidentControl {
 
     @PostMapping("/saveAccident")
     public String save(@ModelAttribute Accident accident, HttpServletRequest req) {
-        takeAction(accident, act -> accidents.put(accident));
+        takeAction(accident, act -> accidents.create(accident));
         String[] ids = req.getParameterValues("rIds");
         accidents.create(accident);
         return "redirect:/index";
@@ -38,7 +41,7 @@ public class AccidentControl {
 
     @GetMapping("/formUpdateAccident/{id}")
     public String update(Model model, @PathVariable("id") int id) {
-        Optional<Accident> optAccident = Optional.ofNullable(accidents.findById(id));
+        Optional<Accident> optAccident = accidents.findById(id);
         if (optAccident.isEmpty()) {
             return "404";
         }
