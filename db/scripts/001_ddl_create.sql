@@ -16,4 +16,9 @@ CREATE TABLE IF NOT EXISTS accident (
   type_id int not null references type(id)
 );
 
+CREATE TABLE IF NOT EXISTS accident_rule (
+  id SERIAL PRIMARY KEY,
+  rule_id INT REFERENCES rule(id),
+  accident_id INT REFERENCES accident(id)
+);
 

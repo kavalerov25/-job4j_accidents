@@ -24,7 +24,7 @@ public class Accident {
     private String name;
     private String text;
     private String address;
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name = "type_id")
     private AccidentType type;
     @ManyToMany(fetch = FetchType.LAZY)
@@ -43,8 +43,7 @@ public class Accident {
         this.type = type;
     }
 
-
-    public Collection<Rule> getRules() {
+    public Set<Rule> getRules() {
         return Set.copyOf(rules);
     }
 
