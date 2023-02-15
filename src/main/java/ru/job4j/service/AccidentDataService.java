@@ -40,4 +40,8 @@ public class AccidentDataService {
     public void delete(int id) {
         store.deleteById(id);
     }
+
+    public Optional<Accident> get(int id) {
+        return store.findById(id);
+    }
 }
