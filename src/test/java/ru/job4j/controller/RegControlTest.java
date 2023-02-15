@@ -15,13 +15,25 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = Main.class)
 @AutoConfigureMockMvc
-class RegControllerTest {
+class RegControlTest {
+
     @Autowired
     MockMvc mockMvc;
+
     @Test
     @WithMockUser
     void regPage() throws Exception {
         this.mockMvc.perform(get("/reg"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("reg"));
+    }
+
+    @Test
+    @WithMockUser
+    public void whenLoginPageCalledWithErrorMessage() throws Exception {
+        this.mockMvc.perform(get("/reg")
+                        .param("error", "errorMessage"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("reg"));
