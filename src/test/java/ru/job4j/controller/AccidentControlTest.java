@@ -35,5 +35,4 @@ class AccidentControlTest {
                 .andDo(print())
                 .andExpect(status().is(404));
     }
-
 }

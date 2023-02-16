@@ -42,4 +42,5 @@ public class AccidentService {
     public Accident put(Accident accident) {
         return store.put(accident);
     }
+
 }
